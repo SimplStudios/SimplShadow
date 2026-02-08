@@ -8,6 +8,10 @@
   const DEBUG = false;
   const log = DEBUG ? console.log.bind(console, '[SimplShadow YouTube]') : () => {};
   
+  // ============== State ==============
+  let isEnabled = false; // Start disabled, wait for state check
+  let initialized = false;
+
   // ============== Configuration ==============
   const CONFIG = {
     skipButtonInterval: 100,
@@ -18,6 +22,9 @@
   // State
   let skipInterval = null;
   let wasAdPlaying = false;
+  let mainObserver = null;
+  let navObserver = null;
+  let periodicCheckInterval = null;
 
   // ============== Ad Selectors for DOM removal ==============
   const AD_SELECTORS = [
@@ -170,17 +177,20 @@
   let observerTimeout = null;
   
   function setupObserver() {
-    const observer = new MutationObserver((mutations) => {
+    mainObserver = new MutationObserver((mutations) => {
+      if (!isEnabled) return;
       if (observerTimeout) return;
       
       observerTimeout = setTimeout(() => {
         observerTimeout = null;
-        hideAds();
-        handleAdState();
+        if (isEnabled) {
+          hideAds();
+          handleAdState();
+        }
       }, CONFIG.mutationDebounce);
     });
 
-    observer.observe(document.documentElement, {
+    mainObserver.observe(document.documentElement, {
       childList: true,
       subtree: true,
       attributes: true,
@@ -188,8 +198,45 @@
     });
   }
 
+  // ============== Cleanup when disabled ==============
+  function cleanup() {
+    log('Cleaning up YouTube blocker');
+    
+    // Stop observers
+    if (mainObserver) {
+      mainObserver.disconnect();
+      mainObserver = null;
+    }
+    if (navObserver) {
+      navObserver.disconnect();
+      navObserver = null;
+    }
+    
+    // Clear intervals
+    if (skipInterval) {
+      clearInterval(skipInterval);
+      skipInterval = null;
+    }
+    if (periodicCheckInterval) {
+      clearInterval(periodicCheckInterval);
+      periodicCheckInterval = null;
+    }
+    
+    // Restore hidden elements
+    document.querySelectorAll('[data-sb-hidden]').forEach(el => {
+      el.style.removeProperty('display');
+      delete el.dataset.sbHidden;
+    });
+    
+    wasAdPlaying = false;
+    initialized = false;
+  }
+
   // ============== Initialize ==============
   function init() {
+    if (initialized || !isEnabled) return;
+    initialized = true;
+    
     log('Initializing SimplShadow YouTube blocker');
     
     // Initial cleanup
@@ -199,14 +246,16 @@
     setupObserver();
     
     // Periodic check for ads
-    setInterval(() => {
-      handleAdState();
-      hideAds();
+    periodicCheckInterval = setInterval(() => {
+      if (isEnabled) {
+        handleAdState();
+        hideAds();
+      }
     }, CONFIG.playerCheckInterval);
     
     // Handle SPA navigation
     let lastUrl = location.href;
-    new MutationObserver(() => {
+    navObserver = new MutationObserver(() => {
       if (location.href !== lastUrl) {
         lastUrl = location.href;
         log('Navigation detected');
@@ -218,17 +267,42 @@
         }
         wasAdPlaying = false;
         
-        setTimeout(hideAds, 500);
+        if (isEnabled) {
+          setTimeout(hideAds, 500);
+        }
       }
-    }).observe(document.body, { childList: true, subtree: true });
+    });
+    
+    if (document.body) {
+      navObserver.observe(document.body, { childList: true, subtree: true });
+    }
     
     log('YouTube blocker initialized');
   }
 
-  // Run when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  // ============== Listen for state changes ==============
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.type === 'toggledEnabled') {
+      isEnabled = message.enabled;
+      if (isEnabled) {
+        init();
+      } else {
+        cleanup();
+      }
+    }
+  });
+
+  // ============== Check initial state ==============
+  chrome.runtime.sendMessage({ type: 'getState' }).then(response => {
+    isEnabled = response?.enabled ?? false;
+    if (isEnabled) {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    }
+  }).catch(() => {
+    // Extension context may be invalid, don't run
+  });
 })();

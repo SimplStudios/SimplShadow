@@ -43,7 +43,7 @@ function addRecentBlocked(url, type = 'ad') {
 }
 
 // Initialize state from storage
-chrome.storage.local.get(['shadowBlockState', 'settings']).then(result => {
+chrome.storage.local.get(['shadowBlockState', 'settings']).then(async result => {
   if (result.shadowBlockState) {
     state = { ...state, ...result.shadowBlockState };
   }
@@ -51,6 +51,10 @@ chrome.storage.local.get(['shadowBlockState', 'settings']).then(result => {
     state.settings = { ...state.settings, ...result.settings };
   }
   state.sessionBlocked = 0;
+  
+  // Sync ruleset state with enabled setting
+  await toggleRuleset(state.enabled);
+  
   updateBadge();
   updateIcon();
 });
@@ -169,6 +173,27 @@ async function toggleRuleset(enabled) {
   }
 }
 
+// Broadcast state change to all tabs
+async function broadcastStateChange(enabled) {
+  try {
+    const tabs = await chrome.tabs.query({});
+    for (const tab of tabs) {
+      if (tab.id && !tab.url?.startsWith('chrome://')) {
+        try {
+          await chrome.tabs.sendMessage(tab.id, { 
+            type: 'toggledEnabled', 
+            enabled: enabled 
+          });
+        } catch (e) {
+          // Tab may not have content script
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Failed to broadcast state change:', e);
+  }
+}
+
 // Get top blocked domains
 function getTopBlocked(limit) {
   return Object.entries(state.blockedByDomain)
@@ -226,6 +251,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       case 'setEnabled':
         state.enabled = message.enabled;
         await toggleRuleset(state.enabled);
+        await broadcastStateChange(state.enabled);
         updateBadge();
         updateIcon();
         saveState();

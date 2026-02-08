@@ -39,7 +39,6 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
-      "css": ["content.css"],
       "run_at": "document_start",
       "all_frames": true
     },
@@ -81,7 +80,7 @@
     "rule_resources": [
       {
         "id": "ruleset_1",
-        "enabled": true,
+        "enabled": false,
         "path": "rules/rules.json"
       }
     ]
@@ -89,7 +88,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["icons/*", "data/resources/*"],
+      "resources": ["icons/*", "data/resources/*", "content.css"],
       "matches": ["<all_urls>"]
     }
   ]

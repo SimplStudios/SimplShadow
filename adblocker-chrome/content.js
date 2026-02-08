@@ -35,16 +35,48 @@
     'iframe[id*="google_ads"]', 'a[href*="//ad."]', 'a[href*="doubleclick.net"]'
   ];
 
-  // Check enabled state
+  // CSS injection for blocking (loaded dynamically)
+  const BLOCKING_CSS_ID = 'simplshadow-blocking-css';
+  let cssLoaded = false;
+
+  async function injectBlockingCSS() {
+    if (cssLoaded || document.getElementById(BLOCKING_CSS_ID)) return;
+    
+    try {
+      // Fetch the CSS file from extension
+      const cssUrl = chrome.runtime.getURL('content.css');
+      const response = await fetch(cssUrl);
+      const cssText = await response.text();
+      
+      const style = document.createElement('style');
+      style.id = BLOCKING_CSS_ID;
+      style.textContent = cssText;
+      (document.head || document.documentElement).appendChild(style);
+      cssLoaded = true;
+    } catch (e) {
+      // CSS injection failed
+    }
+  }
+
+  function removeBlockingCSS() {
+    const style = document.getElementById(BLOCKING_CSS_ID);
+    if (style) {
+      style.remove();
+      cssLoaded = false;
+    }
+  }
+
+  // Check enabled state - default to false (disabled)
   chrome.runtime.sendMessage({ type: 'getState' }).then(response => {
-    isEnabled = response?.enabled ?? true;
+    isEnabled = response?.enabled ?? false;
     if (isEnabled) {
+      injectBlockingCSS();
       hideAds();
       observeDOM();
     }
   }).catch(() => {
-    hideAds();
-    observeDOM();
+    // Extension context invalid or disabled - don't run blocking
+    isEnabled = false;
   });
 
   function hideAds() {
@@ -98,28 +130,33 @@
     });
   }
 
+  // These only run after initial state check sets isEnabled
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      hideAds();
-      setTimeout(cleanupEmptyContainers, 1000);
+      if (isEnabled) {
+        hideAds();
+        setTimeout(cleanupEmptyContainers, 1000);
+      }
     });
-  } else {
-    hideAds();
-    setTimeout(cleanupEmptyContainers, 1000);
   }
   
   window.addEventListener('load', () => {
-    hideAds();
-    setTimeout(cleanupEmptyContainers, 2000);
+    if (isEnabled) {
+      hideAds();
+      setTimeout(cleanupEmptyContainers, 2000);
+    }
   });
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.type === 'toggledEnabled') {
       isEnabled = message.enabled;
       if (isEnabled) {
+        injectBlockingCSS();
         hideAds();
+        observeDOM();
       } else {
-        document.querySelectorAll('[data-shadow-block-hidden]').forEach(el => {
+        // Restore all hidden elements
+        document.querySelectorAll('[data-shadow-block-hidden="true"]').forEach(el => {
           el.style.removeProperty('display');
           el.style.removeProperty('visibility');
           el.style.removeProperty('height');
@@ -129,6 +166,8 @@
           el.style.removeProperty('pointer-events');
           delete el.dataset.shadowBlockHidden;
         });
+        // Remove injected CSS
+        removeBlockingCSS();
       }
     }
   });
