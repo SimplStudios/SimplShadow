@@ -542,7 +542,8 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sessionBlocked: state.sessionBlocked,
         totalBlocked: state.stats.allTime,
         todayBlocked: state.stats.today,
-        topBlocked: getTopBlocked(5)
+        topBlocked: getTopBlocked(5),
+        whitelist: state.whitelistedDomains || []
       });
       break;
     

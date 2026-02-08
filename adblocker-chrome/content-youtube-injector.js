@@ -260,9 +260,18 @@ console.log('[SimplShadow] YouTube ad interceptor loaded');
     script.remove();
   }
   
-  // Check if enabled before injecting
-  chrome.storage.local.get(['shadowBlockState'], result => {
-    if (result.shadowBlockState?.enabled) {
+  // Check if enabled AND not whitelisted before injecting
+  chrome.storage.local.get(['shadowBlockState', 'whitelist'], result => {
+    const globalEnabled = result.shadowBlockState?.enabled;
+    const whitelist = result.whitelist || [];
+    const currentDomain = window.location.hostname;
+    
+    // Check if YouTube is whitelisted
+    const isWhitelisted = whitelist.some(domain => 
+      currentDomain === domain || currentDomain.endsWith('.' + domain)
+    );
+    
+    if (globalEnabled && !isWhitelisted) {
       injectScripts();
     }
   });

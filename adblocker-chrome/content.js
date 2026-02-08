@@ -66,9 +66,28 @@
     }
   }
 
-  // Check enabled state - default to false (disabled)
+  // Get current domain
+  function getCurrentDomain() {
+    try {
+      return new URL(window.location.href).hostname;
+    } catch {
+      return '';
+    }
+  }
+
+  // Check enabled state AND whitelist - default to false (disabled)
   chrome.runtime.sendMessage({ type: 'getState' }).then(response => {
-    isEnabled = response?.enabled ?? false;
+    const globalEnabled = response?.enabled ?? false;
+    const whitelist = response?.whitelist || [];
+    const currentDomain = getCurrentDomain();
+    
+    // Check if site is whitelisted
+    const isWhitelisted = whitelist.some(domain => 
+      currentDomain === domain || currentDomain.endsWith('.' + domain)
+    );
+    
+    isEnabled = globalEnabled && !isWhitelisted;
+    
     if (isEnabled) {
       injectBlockingCSS();
       hideAds();
@@ -122,7 +141,8 @@
   }
 
   function cleanupEmptyContainers() {
-    document.querySelectorAll('[class*="ad-"], [id*="ad-"], [class*="advertisement"]').forEach(container => {
+    // Only select explicit ad-prefixed containers, not partial matches like "masthead-container"
+    document.querySelectorAll('.ad-container, .ad-wrapper, .ad-banner, #ad-container, #ad-wrapper, #ad-banner, [class^="ad-"], [id^="ad-"]').forEach(container => {
       if (container.offsetHeight === 0 || 
           (container.children.length === 0 && container.textContent.trim() === '')) {
         container.style.setProperty('display', 'none', 'important');

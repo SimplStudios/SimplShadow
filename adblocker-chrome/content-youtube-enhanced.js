@@ -128,9 +128,19 @@
     }
   });
   
-  // Check initial state
-  chrome.storage.local.get(['shadowBlockState'], (result) => {
-    isEnabled = result.shadowBlockState?.enabled ?? false;
+  // Check initial state and whitelist
+  chrome.storage.local.get(['shadowBlockState', 'whitelist'], (result) => {
+    const globalEnabled = result.shadowBlockState?.enabled ?? false;
+    const whitelist = result.whitelist || [];
+    const currentDomain = window.location.hostname;
+    
+    // Check if YouTube is whitelisted
+    const isWhitelisted = whitelist.some(domain => 
+      currentDomain === domain || currentDomain.endsWith('.' + domain)
+    );
+    
+    isEnabled = globalEnabled && !isWhitelisted;
+    
     if (isEnabled) {
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', start);

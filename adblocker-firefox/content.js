@@ -11,15 +11,34 @@
   let isEnabled = true;
   let hiddenCount = 0;
   
-  // Check enabled state
+  // Get current domain
+  function getCurrentDomain() {
+    try {
+      return new URL(window.location.href).hostname;
+    } catch {
+      return '';
+    }
+  }
+  
+  // Check enabled state AND whitelist
   browser.runtime.sendMessage({ type: 'getState' }).then(response => {
-    isEnabled = response?.enabled ?? true;
+    const globalEnabled = response?.enabled ?? true;
+    const whitelist = response?.whitelist || [];
+    const currentDomain = getCurrentDomain();
+    
+    // Check if site is whitelisted
+    const isWhitelisted = whitelist.some(domain => 
+      currentDomain === domain || currentDomain.endsWith('.' + domain)
+    );
+    
+    isEnabled = globalEnabled && !isWhitelisted;
+    
     if (isEnabled) {
       hideAds();
       observeDOM();
     }
   }).catch(() => {
-    // Fallback - just run
+    // Fallback - just run if we can't check
     hideAds();
     observeDOM();
   });
@@ -100,7 +119,8 @@
 
   // Remove ad placeholders / empty ad containers
   function cleanupEmptyContainers() {
-    const containers = document.querySelectorAll('[class*="ad-"], [id*="ad-"], [class*="advertisement"]');
+    // Only select explicit ad-prefixed containers, not partial matches like "masthead-container"
+    const containers = document.querySelectorAll('.ad-container, .ad-wrapper, .ad-banner, #ad-container, #ad-wrapper, #ad-banner, [class^="ad-"], [id^="ad-"]');
     containers.forEach(container => {
       if (container.offsetHeight === 0 || 
           (container.children.length === 0 && container.textContent.trim() === '')) {
