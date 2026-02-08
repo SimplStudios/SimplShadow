@@ -50,7 +50,12 @@ class SimplShadowPopup {
   }
   
   applyTheme(theme) {
+    // Set on both html and .app elements to ensure CSS selectors match
     document.documentElement.setAttribute('data-theme', theme);
+    const appEl = document.querySelector('.app');
+    if (appEl) {
+      appEl.setAttribute('data-theme', theme);
+    }
     const themeSelect = document.getElementById('theme-select');
     if (themeSelect) {
       themeSelect.value = theme;

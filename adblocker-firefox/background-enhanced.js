@@ -211,10 +211,24 @@ function getRedirectUrl(url) {
 // ============== Tab Domain Cache ==============
 const tabDomains = new Map();
 
+// Cache tab domains on navigation
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url) {
     tabDomains.set(tabId, extractDomain(changeInfo.url));
   }
+  // Also cache on tab load with full URL from tab object
+  if (tab.url && !tabDomains.has(tabId)) {
+    tabDomains.set(tabId, extractDomain(tab.url));
+  }
+});
+
+// Cache existing tabs on startup
+browser.tabs.query({}).then(tabs => {
+  tabs.forEach(tab => {
+    if (tab.url) {
+      tabDomains.set(tab.id, extractDomain(tab.url));
+    }
+  });
 });
 
 browser.tabs.onRemoved.addListener((tabId) => {
@@ -248,6 +262,12 @@ function getTabDomain(tabId) {
       resolve(domain);
     }).catch(() => resolve(''));
   });
+}
+
+// Synchronous version for blocking - uses cache only
+function getTabDomainSync(tabId) {
+  if (tabId < 0) return '';
+  return tabDomains.get(tabId) || '';
 }
 
 // ============== Badge Update ==============
@@ -289,8 +309,9 @@ function recordBlock(domain, filter, tabId = null) {
 
 // ============== Request Interceptor ==============
 browser.webRequest.onBeforeRequest.addListener(
-  async function(details) {
-    const tabDomain = await getTabDomain(details.tabId);
+  function(details) {
+    // MUST be synchronous for blocking to work in Firefox!
+    const tabDomain = getTabDomainSync(details.tabId);
     const result = shouldBlock(details.url, tabDomain, details.type);
     
     if (result.block) {
