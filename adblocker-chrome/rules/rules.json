@@ -142,5 +142,16 @@
   
   {"id": 138, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||spclient.wg.spotify.com/ads/", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other"]}},
   {"id": 139, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||adeventtracker.spotify.com^", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other"]}},
-  {"id": 140, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||audio-ak-spotify-com.akamaized.net*ad*", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other", "media"]}}
+  {"id": 140, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||audio-ak-spotify-com.akamaized.net*ad*", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other", "media"]}},
+  
+  {"id": 141, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "youtube.com/youtubei/v1/log_event", "resourceTypes": ["xmlhttprequest"]}},
+  {"id": 142, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "youtube.com/api/stats/playback", "resourceTypes": ["xmlhttprequest"]}},
+  {"id": 143, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||static.doubleclick.net^", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other"]}},
+  {"id": 144, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||ad.doubleclick.net^", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other"]}},
+  {"id": 145, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||pubads.g.doubleclick.net^", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other"]}},
+  {"id": 146, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "youtube.com/generate_204", "resourceTypes": ["xmlhttprequest", "ping"]}},
+  {"id": 147, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "youtube.com/pcs/activeview", "resourceTypes": ["xmlhttprequest", "image"]}},
+  {"id": 148, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||yt3.ggpht.com/*/ad_*", "resourceTypes": ["image"]}},
+  {"id": 149, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||www.google.com/pagead/", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other"]}},
+  {"id": 150, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||2mdn.net^", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other"]}}
 ]
