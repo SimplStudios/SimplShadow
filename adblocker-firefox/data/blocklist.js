@@ -571,15 +571,11 @@ const BLOCKED_DOMAINS = [
 
 // URL patterns to block (regex patterns)
 const BLOCKED_URL_PATTERNS = [
-  /\/ads?\//i,
-  /\/advert/i,
   /\/banner.*ads?/i,
   /\/sponsored/i,
   /\/tracking\//i,
   /\/pixel\//i,
   /beacon\./i,
-  /analytics\./i,
-  /pagead/i,
   /doubleclick/i,
   /adsense/i,
   /adserver/i,
