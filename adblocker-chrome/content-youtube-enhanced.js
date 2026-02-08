@@ -34,11 +34,14 @@
     // Check for ad-showing class (most reliable)
     if (player.classList.contains('ad-showing')) return true;
     if (player.classList.contains('ad-interrupting')) return true;
+    if (player.classList.contains('ad-created')) return true;
     
     // Check for ad overlay elements
     if (document.querySelector('.ytp-ad-player-overlay')) return true;
     if (document.querySelector('.ytp-ad-preview-container')) return true;
     if (document.querySelector('.ytp-ad-text')) return true;
+    if (document.querySelector('.ytp-ad-module:not(:empty)')) return true;
+    if (document.querySelector('.video-ads.ytp-ad-module')) return true;
     
     // Check player API if available
     try {
@@ -131,11 +134,21 @@
     '.video-ads',
     '.ytp-ad-progress',
     '.ytp-ad-progress-list',
+    '.ytp-ad-module',
+    '.ytp-ad-preview-slot',
+    '.ytp-ad-preview-container',
+    '.ytp-ad-text',
+    '.ytp-ad-skip-ad-slot',
+    '.ytp-ad-persisting-progress-bar-container',
+    '.ytp-ad-survey-questions-container',
     'ytd-ad-slot-renderer',
     'ytd-in-feed-ad-layout-renderer',
     'ytd-banner-promo-renderer',
     'ytd-promoted-sparkles-web-renderer',
-    '#masthead-ad'
+    '#masthead-ad',
+    'ytd-display-ad-renderer',
+    'ytd-rich-item-renderer:has(.ytd-ad-slot-renderer)',
+    '[layout="display-ad-interstitial"]'
   ];
   
   function removeAdOverlays() {
@@ -145,7 +158,16 @@
         el.style.setProperty('display', 'none', 'important');
         el.style.setProperty('visibility', 'hidden', 'important');
         el.style.setProperty('opacity', '0', 'important');
+        el.style.setProperty('pointer-events', 'none', 'important');
+        el.style.setProperty('height', '0', 'important');
+        el.style.setProperty('overflow', 'hidden', 'important');
       }
+    }
+    
+    // Also strip ad classes from the player
+    const player = getPlayer();
+    if (player) {
+      player.classList.remove('ad-showing', 'ad-interrupting', 'ad-created');
     }
   }
   
@@ -172,6 +194,21 @@
   
   function checkForAds() {
     if (!isEnabled) return;
+    
+    const player = getPlayer();
+    
+    // Always try to strip ad classes
+    if (player) {
+      const hadAdClass = player.classList.contains('ad-showing') || 
+                         player.classList.contains('ad-interrupting') ||
+                         player.classList.contains('ad-created');
+      if (hadAdClass) {
+        player.classList.remove('ad-showing', 'ad-interrupting', 'ad-created');
+        skipAd();
+        removeAdOverlays();
+        return;
+      }
+    }
     
     if (isAdPlaying()) {
       skipAd();
@@ -231,9 +268,13 @@
       for (const mutation of mutations) {
         if (mutation.attributeName === 'class') {
           const target = mutation.target;
-          if (target.id === 'movie_player') {
-            if (target.classList.contains('ad-showing') || target.classList.contains('ad-interrupting')) {
-              log('Ad class detected via observer');
+          if (target.id === 'movie_player' || target.classList?.contains('html5-video-player')) {
+            // CRITICAL: Strip ad classes immediately
+            if (target.classList.contains('ad-showing') || 
+                target.classList.contains('ad-interrupting') ||
+                target.classList.contains('ad-created')) {
+              log('Ad class detected, stripping and skipping');
+              target.classList.remove('ad-showing', 'ad-interrupting', 'ad-created');
               skipAd();
               removeAdOverlays();
             } else {
@@ -244,7 +285,7 @@
       }
       
       // Check for new ad elements
-      if (document.querySelector('.ytp-ad-player-overlay, .ytp-ad-text')) {
+      if (document.querySelector('.ytp-ad-player-overlay, .ytp-ad-text, .ytp-ad-module:not(:empty)')) {
         skipAd();
         removeAdOverlays();
       }
