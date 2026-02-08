@@ -28,6 +28,20 @@ let state = {
 // Per-tab statistics
 let tabStats = {};
 
+// Recent blocked requests (for live process view)
+let recentBlocked = [];
+const MAX_RECENT = 50;
+
+function addRecentBlocked(url, type = 'ad') {
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  
+  recentBlocked.unshift({ url, type, time, timestamp: now.getTime() });
+  if (recentBlocked.length > MAX_RECENT) {
+    recentBlocked = recentBlocked.slice(0, MAX_RECENT);
+  }
+}
+
 // Initialize state from storage
 chrome.storage.local.get(['shadowBlockState', 'settings']).then(result => {
   if (result.shadowBlockState) {
@@ -93,15 +107,15 @@ chrome.declarativeNetRequest.onRuleMatchedDebug?.addListener((info) => {
   if (info.rule.rulesetId === 'ruleset_1') {
     try {
       const url = new URL(info.request.url);
-      recordBlock(url.hostname);
+      recordBlock(url.hostname, info.request.tabId, info.request.url);
     } catch {
-      recordBlock(null);
+      recordBlock(null, null, info.request.url);
     }
   }
 });
 
 // Record blocked request
-function recordBlock(domain, tabId = null) {
+function recordBlock(domain, tabId = null, url = null) {
   state.totalBlocked++;
   state.sessionBlocked++;
   state.stats.today++;
@@ -110,6 +124,22 @@ function recordBlock(domain, tabId = null) {
   
   if (domain) {
     state.blockedByDomain[domain] = (state.blockedByDomain[domain] || 0) + 1;
+  }
+  
+  // Determine request type
+  let type = 'ad';
+  if (url) {
+    const lowerUrl = url.toLowerCase();
+    if (lowerUrl.includes('track') || lowerUrl.includes('analytics') || lowerUrl.includes('pixel')) {
+      type = 'tracker';
+    } else if (lowerUrl.includes('.js') || lowerUrl.includes('script')) {
+      type = 'script';
+    } else if (lowerUrl.includes('websocket') || lowerUrl.includes('wss:')) {
+      type = 'websocket';
+    }
+    
+    // Add to recent blocked
+    addRecentBlocked(url, type);
   }
   
   // Track per-tab stats
@@ -182,6 +212,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           blocked: stats.blocked,
           elements: stats.elements,
           domains: Object.entries(stats.domains).map(([domain, count]) => ({ domain, count }))
+        });
+        break;
+      
+      case 'getRecentBlocked':
+        sendResponse({
+          processes: recentBlocked.slice(0, 15)
         });
         break;
       

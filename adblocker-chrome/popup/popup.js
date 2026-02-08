@@ -35,6 +35,14 @@ class SimplShadowPopup {
     this.updateUI();
     await this.getCurrentTab();
     await this.loadStats();
+    await this.loadProcesses();
+    
+    // Refresh processes periodically when panel is open
+    setInterval(() => {
+      if (document.querySelector('.app.panel-open')) {
+        this.loadProcesses();
+      }
+    }, 2000);
   }
   
   // Theme Management
@@ -127,7 +135,7 @@ class SimplShadowPopup {
   // Bind Event Listeners
   bindEvents() {
     // Power button
-    const powerBtn = document.getElementById('power-btn');
+    const powerBtn = document.getElementById('power-toggle');
     powerBtn?.addEventListener('click', () => this.togglePower());
     
     // Settings button
@@ -366,19 +374,39 @@ class SimplShadowPopup {
   
   // UI Updates
   updateUI() {
-    // Power button
-    const powerBtn = document.getElementById('power-btn');
-    const statusDot = document.getElementById('status-dot');
+    const app = document.querySelector('.app');
+    const powerBtn = document.getElementById('power-toggle');
+    const statusDisplay = document.querySelector('.status-display');
+    const statusDot = document.querySelector('.status-dot');
     const statusText = document.getElementById('status-text');
+    const logoIcon = document.querySelector('.logo-icon svg');
     
     if (this.state.enabled) {
+      // ENABLED STATE - Blue, glowing
       powerBtn?.classList.add('active');
       statusDot?.classList.add('active');
+      statusDisplay?.classList.remove('disabled');
+      app?.removeAttribute('data-disabled');
       if (statusText) statusText.textContent = 'Protection Active';
+      
+      // Update logo gradient to blue
+      if (logoIcon) {
+        const gradient = logoIcon.querySelector('#logoGrad stop');
+        if (gradient) gradient.style.stopColor = '#3B82F6';
+      }
     } else {
+      // DISABLED STATE - Grey, no glow
       powerBtn?.classList.remove('active');
       statusDot?.classList.remove('active');
+      statusDisplay?.classList.add('disabled');
+      app?.setAttribute('data-disabled', 'true');
       if (statusText) statusText.textContent = 'Protection Paused';
+      
+      // Update logo gradient to grey
+      if (logoIcon) {
+        const gradient = logoIcon.querySelector('#logoGrad stop');
+        if (gradient) gradient.style.stopColor = '#6B7280';
+      }
     }
   }
   
@@ -417,6 +445,13 @@ class SimplShadowPopup {
     
     const detailWebsockets = document.getElementById('detail-websockets');
     if (detailWebsockets) detailWebsockets.textContent = this.formatNumber(this.state.stats.websocketsBlocked || 0);
+    
+    // Updated detail panel stats
+    const scriptsCount = document.getElementById('scripts-count');
+    if (scriptsCount) scriptsCount.textContent = this.formatNumber(this.state.stats.scriptsBlocked || 0);
+    
+    const websocketsCount = document.getElementById('websockets-count');
+    if (websocketsCount) websocketsCount.textContent = this.formatNumber(this.state.stats.websocketsBlocked || 0);
   }
   
   updateSiteCard() {
@@ -469,6 +504,76 @@ class SimplShadowPopup {
       `;
       listEl.appendChild(itemEl);
     });
+  }
+  
+  // Update live process list
+  updateProcessList(processes = []) {
+    const listEl = document.getElementById('process-list');
+    if (!listEl) return;
+    
+    if (!processes || processes.length === 0) {
+      listEl.innerHTML = `
+        <div class="empty-state small">
+          <span>Monitoring...</span>
+          <p>Blocked requests appear here in real-time</p>
+        </div>
+      `;
+      return;
+    }
+    
+    listEl.innerHTML = processes.slice(0, 15).map(proc => {
+      const typeClass = proc.type || 'ad';
+      const typeIcons = {
+        ad: '🚫',
+        tracker: '👁️',
+        script: '📜',
+        websocket: '🔌'
+      };
+      const typeLabels = {
+        ad: 'Ad',
+        tracker: 'Tracker',
+        script: 'Script',
+        websocket: 'WebSocket'
+      };
+      
+      return `
+        <div class="process-item">
+          <div class="process-type ${typeClass}" title="${typeLabels[typeClass] || 'Blocked'}">
+            ${typeIcons[typeClass] || '🚫'}
+          </div>
+          <div class="process-info">
+            <div class="process-url" title="${proc.url}">${this.truncateUrl(proc.url)}</div>
+            <div class="process-label">${typeLabels[typeClass] || 'Blocked'}</div>
+          </div>
+          <div class="process-time">${proc.time || 'now'}</div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  truncateUrl(url) {
+    if (!url) return '—';
+    try {
+      const parsed = new URL(url);
+      const path = parsed.pathname;
+      if (path.length > 30) {
+        return parsed.hostname + '/...' + path.slice(-20);
+      }
+      return parsed.hostname + path;
+    } catch {
+      return url.slice(0, 40);
+    }
+  }
+  
+  async loadProcesses() {
+    try {
+      const response = await chrome.runtime.sendMessage({ action: 'getRecentBlocked' });
+      if (response?.processes) {
+        this.updateProcessList(response.processes);
+      }
+    } catch (e) {
+      // Silent fail - processes may not be available
+    }
   }
   
   async updateBadge() {
