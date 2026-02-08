@@ -4,7 +4,7 @@
 class SimplShadowPopup {
   constructor() {
     this.state = {
-      enabled: true,
+      enabled: false,
       domain: '',
       whitelisted: false,
       stats: {

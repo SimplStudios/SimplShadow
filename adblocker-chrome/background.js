@@ -5,7 +5,7 @@
 
 // State management
 let state = {
-  enabled: true,
+  enabled: false,
   totalBlocked: 0,
   sessionBlocked: 0,
   blockedByDomain: {},

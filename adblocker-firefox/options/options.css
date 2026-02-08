@@ -1,9 +1,9 @@
-/* ShadowBlock Options - Styles */
+/* SimplShadow Options - Styles */
 
 :root {
-  --primary: #8B5CF6;
-  --primary-hover: #7C3AED;
-  --primary-light: rgba(139, 92, 246, 0.1);
+  --primary: #3B82F6;
+  --primary-hover: #2563EB;
+  --primary-light: rgba(59, 130, 246, 0.1);
   --bg-dark: #0F0F14;
   --bg-card: #1A1A24;
   --bg-input: #252532;
@@ -23,7 +23,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   background: var(--bg-dark);
   color: var(--text-primary);
   line-height: 1.6;
@@ -49,13 +49,14 @@ body {
 }
 
 .logo svg {
-  filter: drop-shadow(0 4px 12px rgba(139, 92, 246, 0.3));
+  filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.3));
 }
 
 .logo-text h1 {
+  font-family: 'Outfit', sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--primary), #A78BFA);
+  background: linear-gradient(135deg, var(--primary), #60A5FA);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

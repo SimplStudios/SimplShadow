@@ -2,9 +2,6 @@
 
 'use strict';
 
-// Chrome/Firefox compatibility
-const browser = typeof chrome !== 'undefined' ? chrome : browser;
-
 // ============== Tab Navigation ==============
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -24,7 +21,7 @@ document.querySelectorAll('.tab').forEach(tab => {
 // ============== Load Data ==============
 async function loadData() {
   // Get stats
-  const response = await browser.runtime.sendMessage({ type: 'getStats' });
+  const response = await chrome.runtime.sendMessage({ type: 'getStats' });
   
   // Update stats display
   document.getElementById('statSession').textContent = formatNumber(response.session);
@@ -55,13 +52,13 @@ async function loadData() {
   whitelistItems.querySelectorAll('.remove-whitelist').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       const domain = e.target.closest('.whitelist-item').dataset.domain;
-      await browser.runtime.sendMessage({ type: 'toggleWhitelist', domain });
+      await chrome.runtime.sendMessage({ type: 'toggleWhitelist', domain });
       loadData();
     });
   });
   
   // Load user rules
-  const rulesResponse = await browser.runtime.sendMessage({ type: 'getUserRules' });
+  const rulesResponse = await chrome.runtime.sendMessage({ type: 'getUserRules' });
   document.getElementById('userRules').value = rulesResponse.rules.join('\n');
 }
 
@@ -83,7 +80,7 @@ document.querySelectorAll('.filter-item input').forEach(checkbox => {
     const enabled = e.target.checked;
     
     // Save to storage
-    const stored = await browser.storage.local.get(['filterLists']);
+    const stored = await chrome.storage.local.get(['filterLists']);
     const filterLists = stored.filterLists || { enabled: [], custom: [] };
     
     if (enabled) {
@@ -94,7 +91,7 @@ document.querySelectorAll('.filter-item input').forEach(checkbox => {
       filterLists.enabled = filterLists.enabled.filter(l => l !== listName);
     }
     
-    await browser.storage.local.set({ filterLists });
+    await chrome.storage.local.set({ filterLists });
     
     // Show notification
     showNotification(enabled ? `Enabled ${listName}` : `Disabled ${listName}`);
@@ -115,12 +112,12 @@ document.getElementById('addCustomUrl').addEventListener('click', async () => {
     return;
   }
   
-  const stored = await browser.storage.local.get(['filterLists']);
+  const stored = await chrome.storage.local.get(['filterLists']);
   const filterLists = stored.filterLists || { enabled: [], custom: [] };
   
   if (!filterLists.custom.includes(url)) {
     filterLists.custom.push(url);
-    await browser.storage.local.set({ filterLists });
+    await chrome.storage.local.set({ filterLists });
     
     // Add to UI
     const customList = document.getElementById('customFilterLists');
@@ -142,10 +139,10 @@ document.getElementById('customFilterLists').addEventListener('click', async (e)
     const item = e.target.closest('.custom-list-item');
     const url = item.dataset.url;
     
-    const stored = await browser.storage.local.get(['filterLists']);
+    const stored = await chrome.storage.local.get(['filterLists']);
     const filterLists = stored.filterLists || { enabled: [], custom: [] };
     filterLists.custom = filterLists.custom.filter(u => u !== url);
-    await browser.storage.local.set({ filterLists });
+    await chrome.storage.local.set({ filterLists });
     
     item.remove();
     showNotification('Custom filter list removed');
@@ -163,7 +160,7 @@ document.getElementById('updateLists').addEventListener('click', async () => {
   
   const now = new Date().toLocaleString();
   document.getElementById('lastUpdate').textContent = now;
-  await browser.storage.local.set({ lastFilterUpdate: now });
+  await chrome.storage.local.set({ lastFilterUpdate: now });
   
   btn.disabled = false;
   btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Update All Lists';
@@ -179,10 +176,10 @@ document.getElementById('saveRules').addEventListener('click', async () => {
     .filter(r => r && !r.startsWith('!'));
   
   // Clear existing and add new
-  await browser.runtime.sendMessage({ type: 'resetUserRules' });
+  await chrome.runtime.sendMessage({ type: 'resetUserRules' });
   
   for (const rule of rules) {
-    await browser.runtime.sendMessage({ type: 'addUserRule', rule });
+    await chrome.runtime.sendMessage({ type: 'addUserRule', rule });
   }
   
   showNotification('Rules saved');
@@ -191,7 +188,7 @@ document.getElementById('saveRules').addEventListener('click', async () => {
 document.getElementById('clearRules').addEventListener('click', async () => {
   if (confirm('Are you sure you want to clear all custom rules?')) {
     document.getElementById('userRules').value = '';
-    await browser.runtime.sendMessage({ type: 'resetUserRules' });
+    await chrome.runtime.sendMessage({ type: 'resetUserRules' });
     showNotification('Rules cleared');
   }
 });
@@ -221,7 +218,7 @@ document.getElementById('addQuickRule').addEventListener('click', async () => {
   textarea.value = textarea.value ? textarea.value + '\n' + rule : rule;
   
   // Save
-  await browser.runtime.sendMessage({ type: 'addUserRule', rule });
+  await chrome.runtime.sendMessage({ type: 'addUserRule', rule });
   
   document.getElementById('ruleValue').value = '';
   showNotification('Rule added');
@@ -234,7 +231,7 @@ document.getElementById('addWhitelist').addEventListener('click', async () => {
   
   if (!domain) return;
   
-  await browser.runtime.sendMessage({ type: 'toggleWhitelist', domain });
+  await chrome.runtime.sendMessage({ type: 'toggleWhitelist', domain });
   input.value = '';
   loadData();
   showNotification(`${domain} added to whitelist`);
@@ -243,14 +240,14 @@ document.getElementById('addWhitelist').addEventListener('click', async () => {
 // ============== Statistics ==============
 document.getElementById('resetStats').addEventListener('click', async () => {
   if (confirm('Are you sure you want to reset all statistics?')) {
-    await browser.runtime.sendMessage({ type: 'resetStats' });
+    await chrome.runtime.sendMessage({ type: 'resetStats' });
     loadData();
     showNotification('Statistics reset');
   }
 });
 
 document.getElementById('exportStats').addEventListener('click', async () => {
-  const response = await browser.runtime.sendMessage({ type: 'getStats' });
+  const response = await chrome.runtime.sendMessage({ type: 'getStats' });
   
   const data = {
     exportDate: new Date().toISOString(),
@@ -326,7 +323,7 @@ document.head.appendChild(style);
 // ============== Initialize ==============
 async function init() {
   // Load last update time
-  const stored = await browser.storage.local.get(['lastFilterUpdate', 'filterLists']);
+  const stored = await chrome.storage.local.get(['lastFilterUpdate', 'filterLists']);
   
   if (stored.lastFilterUpdate) {
     document.getElementById('lastUpdate').textContent = stored.lastFilterUpdate;
