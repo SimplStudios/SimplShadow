@@ -198,6 +198,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       case 'getStats':
         sendResponse({
           totalBlocked: state.stats.allTime,
+          todayBlocked: state.stats.today,
+          weekBlocked: state.stats.thisWeek,
           trackersBlocked: Math.floor(state.stats.allTime * 0.4),
           scriptsBlocked: Math.floor(state.stats.allTime * 0.2),
           websocketsBlocked: Math.floor(state.stats.allTime * 0.05),

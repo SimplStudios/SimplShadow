@@ -172,7 +172,7 @@ class SimplShadowPopup {
     });
     
     // Open options
-    const optionsBtn = document.getElementById('open-options');
+    const optionsBtn = document.getElementById('open-options-btn');
     optionsBtn?.addEventListener('click', () => this.openOptions());
     
     // Clear stats
@@ -411,17 +411,17 @@ class SimplShadowPopup {
   }
   
   updateStatsUI() {
-    // Total blocked
+    // This Session = current page/tab blocked count
+    const sessionEl = document.getElementById('session-blocked');
+    if (sessionEl) sessionEl.textContent = this.formatNumber(this.state.stats.pageBlocked || 0);
+    
+    // Today = blocked today
+    const todayEl = document.getElementById('today-blocked');
+    if (todayEl) todayEl.textContent = this.formatNumber(this.state.stats.todayBlocked || 0);
+    
+    // All Time = total ever blocked
     const totalEl = document.getElementById('total-blocked');
-    if (totalEl) totalEl.textContent = this.formatNumber(this.state.stats.totalBlocked);
-    
-    // Page blocked
-    const pageEl = document.getElementById('page-blocked');
-    if (pageEl) pageEl.textContent = this.formatNumber(this.state.stats.pageBlocked);
-    
-    // Elements hidden
-    const elementsEl = document.getElementById('elements-hidden');
-    if (elementsEl) elementsEl.textContent = this.formatNumber(this.state.stats.elements);
+    if (totalEl) totalEl.textContent = this.formatNumber(this.state.stats.totalBlocked || 0);
     
     // Footer stats
     const trackersEl = document.getElementById('trackers-blocked');
@@ -434,8 +434,11 @@ class SimplShadowPopup {
     this.updateBadge();
     
     // Detail stats in side panel
+    const weekEl = document.getElementById('week-blocked');
+    if (weekEl) weekEl.textContent = this.formatNumber(this.state.stats.weekBlocked || 0);
+    
     const detailTotal = document.getElementById('detail-total');
-    if (detailTotal) detailTotal.textContent = this.formatNumber(this.state.stats.totalBlocked);
+    if (detailTotal) detailTotal.textContent = this.formatNumber(this.state.stats.totalBlocked || 0);
     
     const detailPage = document.getElementById('detail-page');
     if (detailPage) detailPage.textContent = this.formatNumber(this.state.stats.pageBlocked);
