@@ -18,28 +18,26 @@ ins.adsbygoogle,
   overflow: hidden !important;
 }
 
-/* Generic Ad Containers */
-[class*="ad-container"],
-[class*="ad-wrapper"],
-[class*="ad-banner"],
-[class*="ad-unit"],
-[class*="ad-slot"],
-[class*="ad-box"],
-[class*="ad-frame"],
-[class*="ad-space"],
-[class*="ad-zone"],
-[class*="advertisement"],
-[class*="advert-"],
-[class*="-advert"],
-[class*="sponsored-"],
-[class*="-sponsored"],
-[class*="promoted-"],
-[id*="ad-container"],
-[id*="ad-wrapper"],
-[id*="ad-banner"],
-[id*="ad-unit"],
-[id*="advertisement"],
-[id*="sponsored"] {
+/* Generic Ad Containers - SPECIFIC selectors only */
+.ad-container,
+.ad-wrapper,
+.ad-banner,
+.ad-unit,
+.ad-slot,
+.ad-box,
+.ad-frame,
+.ad-space,
+.ad-zone,
+.advertisement,
+.advert-wrapper,
+.sponsored-content,
+.promoted-post,
+#ad-container,
+#ad-wrapper,
+#ad-banner,
+#ad-unit,
+#advertisement,
+#sponsored {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;
@@ -257,9 +255,9 @@ ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-ads"] {
   display: none !important;
 }
 
-/* Ad showing state - hide ad info */
-.html5-video-player.ad-showing .ytp-chrome-top,
-.html5-video-player.ad-showing .ytp-ad-player-overlay {
+/* Hide ad info bar only, NOT the top chrome */
+.html5-video-player.ad-showing .ytp-ad-player-overlay,
+.html5-video-player.ad-showing .ytp-ad-player-overlay-layout__player-card-mid-roll-count {
   display: none !important;
 }
 
