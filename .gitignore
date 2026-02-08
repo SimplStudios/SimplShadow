@@ -6,6 +6,10 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Chrome auto-generated
+_metadata/
+*/_metadata/
+
 # Logs
 *.log
 
