@@ -6,9 +6,9 @@
   "author": "SimplShadow",
   
   "icons": {
-    "16": "icons/icon16.svg",
-    "48": "icons/icon48.svg",
-    "128": "icons/icon128.svg"
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
 
   "permissions": [
@@ -65,10 +65,10 @@
 
   "action": {
     "default_icon": {
-      "16": "icons/icon16.svg",
-      "48": "icons/icon48.svg"
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
     },
-    "default_title": "ShadowBlock",
+    "default_title": "SimplShadow",
     "default_popup": "popup/popup.html"
   },
 
