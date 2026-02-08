@@ -48,6 +48,16 @@
         "*://*.youtu.be/*",
         "*://*.youtube-nocookie.com/*"
       ],
+      "js": ["content-youtube-injector.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtu.be/*",
+        "*://*.youtube-nocookie.com/*"
+      ],
       "js": ["content-youtube-enhanced.js"],
       "run_at": "document_start",
       "all_frames": true
@@ -88,7 +98,12 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["icons/*", "data/resources/*", "content.css"],
+      "resources": [
+        "icons/*", 
+        "data/resources/*", 
+        "content.css",
+        "data/resources/google-ima-shim.js"
+      ],
       "matches": ["<all_urls>"]
     }
   ]
