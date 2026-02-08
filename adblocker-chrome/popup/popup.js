@@ -73,10 +73,11 @@ class SimplShadowPopup {
   // Load Extension State
   async loadState() {
     try {
-      const result = await chrome.storage.local.get(['enabled', 'whitelist', 'settings', 'stats']);
-      this.state.enabled = result.enabled !== false;
+      const result = await chrome.storage.local.get(['shadowBlockState', 'whitelist', 'settings']);
+      // Default to FALSE (disabled) on first load - user must explicitly enable
+      this.state.enabled = result.shadowBlockState?.enabled === true;
       this.state.settings = { ...this.state.settings, ...result.settings };
-      this.state.stats.totalBlocked = result.stats?.totalBlocked || 0;
+      this.state.stats.totalBlocked = result.shadowBlockState?.totalBlocked || 0;
     } catch (e) {
       console.error('Failed to load state:', e);
     }

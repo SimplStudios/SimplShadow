@@ -156,7 +156,6 @@
   {"id": 150, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||2mdn.net^", "resourceTypes": ["script", "image", "sub_frame", "xmlhttprequest", "other"]}},
   
   {"id": 151, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||googleads.g.doubleclick.net/pagead/id", "resourceTypes": ["script", "image", "xmlhttprequest", "ping", "other"]}},
-  {"id": 152, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "*sodar*", "resourceTypes": ["script"]}},
   {"id": 153, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||tpc.googlesyndication.com/sodar/", "resourceTypes": ["script"]}},
   {"id": 154, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||www.googleadservices.com/pagead/", "resourceTypes": ["script", "image", "xmlhttprequest", "other"]}},
   {"id": 158, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "/api/ads/", "resourceTypes": ["script", "xmlhttprequest"]}},
@@ -164,6 +163,5 @@
   {"id": 160, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||www.youtube.com/api/stats/delayplay", "resourceTypes": ["xmlhttprequest", "ping"]}},
   {"id": 161, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||www.youtube.com/api/stats/watchtime*&adformat", "resourceTypes": ["xmlhttprequest", "ping"]}},
   {"id": 162, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||play.google.com/log*", "resourceTypes": ["xmlhttprequest", "ping"]}},
-  {"id": 163, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||jnn-pa.googleapis.com^", "resourceTypes": ["script", "xmlhttprequest"]}},
   {"id": 164, "priority": 1, "action": {"type": "block"}, "condition": {"urlFilter": "||pagead.l.doubleclick.net^", "resourceTypes": ["script", "image", "xmlhttprequest", "other"]}}
 ]

@@ -231,29 +231,25 @@ window.google.ima=ima;
 try{Object.defineProperty(window.google,'ima',{value:ima,writable:false,configurable:false})}catch(e){}
 
 // ========== AD DATA STRIPPING ==========
-// Remove ad placements from YouTube's initial data
+// Minimal - only strip adPlacements which are safe to remove
 
-const AD_KEYS=['adPlacements','playerAds','adSlots','adBreaks'];
+const AD_KEYS=['adPlacements','playerAds'];
 
 function stripAds(obj,depth){
-  if(!obj||typeof obj!=='object'||depth>10)return obj;
+  if(!obj||typeof obj!=='object'||depth>5)return obj;
   depth=depth||0;
-  if(Array.isArray(obj)){
-    for(var i=0;i<obj.length;i++)stripAds(obj[i],depth+1);
-    return obj;
-  }
+  if(Array.isArray(obj))return obj;
   for(var k=0;k<AD_KEYS.length;k++){
     if(AD_KEYS[k] in obj)delete obj[AD_KEYS[k]];
   }
-  if(obj.playerResponse)stripAds(obj.playerResponse,depth+1);
   return obj;
 }
 
-// Intercept ytInitialPlayerResponse
+// Only intercept ytInitialPlayerResponse - nothing else
 var _ytpr=window.ytInitialPlayerResponse;
 Object.defineProperty(window,'ytInitialPlayerResponse',{
-  get:function(){return stripAds(_ytpr)},
-  set:function(v){_ytpr=stripAds(v)},
+  get:function(){return _ytpr?stripAds(_ytpr):_ytpr},
+  set:function(v){_ytpr=v;if(v)stripAds(v)},
   configurable:true
 });
 
