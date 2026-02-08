@@ -1,0 +1,348 @@
+/* ShadowBlock - Content CSS
+   Aggressive ad hiding rules applied via stylesheet */
+
+/* Google Ads */
+.adsbygoogle,
+ins.adsbygoogle,
+#google_ads_frame,
+[id^="google_ads"],
+[id^="div-gpt-ad"],
+.google-auto-placed,
+[data-google-av],
+[data-ad-client],
+[data-ad-slot] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Generic Ad Containers */
+[class*="ad-container"],
+[class*="ad-wrapper"],
+[class*="ad-banner"],
+[class*="ad-unit"],
+[class*="ad-slot"],
+[class*="ad-box"],
+[class*="ad-frame"],
+[class*="ad-space"],
+[class*="ad-zone"],
+[class*="advertisement"],
+[class*="advert-"],
+[class*="-advert"],
+[class*="sponsored-"],
+[class*="-sponsored"],
+[class*="promoted-"],
+[id*="ad-container"],
+[id*="ad-wrapper"],
+[id*="ad-banner"],
+[id*="ad-unit"],
+[id*="advertisement"],
+[id*="sponsored"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Taboola / Outbrain / Content Recommendation */
+.taboola-container,
+[id^="taboola"],
+[class*="taboola"],
+.OUTBRAIN,
+.outbrain,
+[data-widget-type="taboola"],
+[data-obct],
+.outbrain-widget,
+#outbrain_widget,
+.mgid-container,
+[id^="mgid"],
+.zergnet,
+.zemanta-widget,
+.revcontent,
+.content-recommendation,
+.recommended-content,
+.around-the-web {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+}
+
+/* Popups / Overlays / Interstitials */
+.popup-ad,
+.modal-ad,
+.overlay-ad,
+.interstitial-ad,
+.lightbox-ad,
+[class*="popup-overlay"],
+[class*="ad-overlay"],
+[class*="ad-modal"],
+.newsletter-popup,
+.subscription-popup {
+  display: none !important;
+}
+
+/* Video Ads */
+.video-ad,
+.video-ads,
+.preroll-ad,
+.midroll-ad,
+.postroll-ad,
+.vast-ad,
+[class*="video-ad-"],
+.ima-ad-container {
+  display: none !important;
+}
+
+/* Native / Sponsored Content Labels */
+.native-ad,
+.native-ads,
+.sponsored-content,
+.sponsored-post,
+.promoted-content,
+.promoted-post,
+.paid-content,
+.partner-content,
+[data-sponsored],
+[data-native-ad],
+.advertorial {
+  display: none !important;
+}
+
+/* Social Share Trackers */
+.addthis_toolbox,
+.addthis-smartlayers,
+.at-share-btn-elements,
+.shareaholic-share-buttons,
+.sharethis-inline-share-buttons {
+  display: none !important;
+}
+
+/* Cookie Consent Popups (optional - comment out if unwanted) */
+/*
+.cookie-banner,
+.cookie-consent,
+.cookie-notice,
+.gdpr-banner,
+.gdpr-consent,
+[class*="cookie-consent"],
+[class*="cookie-banner"],
+[id*="cookie-consent"],
+[id*="cookie-banner"] {
+  display: none !important;
+}
+*/
+
+/* Sidebar Ads */
+.sidebar-ad,
+.sidebar-ads,
+.side-ad,
+.widget_ad,
+.widget-ad,
+.sidebar-advertisement,
+#sidebar-ad,
+.rail-ad {
+  display: none !important;
+}
+
+/* Header/Footer Ads */
+.header-ad,
+.footer-ad,
+.top-ad,
+.bottom-ad,
+.leaderboard-ad,
+.top-banner-ad,
+.header-banner-ad,
+.sticky-ad,
+.floating-ad {
+  display: none !important;
+}
+
+/* Iframes from known ad sources - hide as fallback */
+iframe[src*="doubleclick"],
+iframe[src*="googlesyndication"],
+iframe[src*="googleadservices"],
+iframe[src*="googleads"],
+iframe[src*="facebook.com/plugins"],
+iframe[src*="amazon-adsystem"],
+iframe[src*="taboola"],
+iframe[src*="outbrain"],
+iframe[src*="adroll"],
+iframe[src*="criteo"] {
+  display: none !important;
+}
+
+/* Empty ad placeholders cleanup */
+[class*="ad-placeholder"],
+[class*="ad-loading"],
+[class*="ad-skeleton"],
+.skeleton-ad {
+  display: none !important;
+}
+
+/* Anti-adblock messages - hide if blocking is detected */
+.anti-adblock,
+.adblock-notice,
+.adblock-warning,
+.adblock-detected,
+[class*="anti-adblock"],
+[class*="adblock-notice"],
+[id*="anti-adblock"],
+[id*="adblock-notice"] {
+  display: none !important;
+}
+
+/* ==================== YOUTUBE ==================== */
+
+/* Video Ad Overlays */
+.video-ads,
+.ytp-ad-module,
+.ytp-ad-overlay-slot,
+.ytp-ad-text-overlay,
+.ytp-ad-overlay-container,
+.ytp-ad-overlay-close-button,
+.ytp-ad-player-overlay,
+.ytp-ad-player-overlay-layout,
+.ytp-ad-preview-container,
+.ytp-ad-message-container,
+.ytp-ad-persistent-progress-bar-container,
+.ytp-ad-progress,
+.ytp-ad-progress-list,
+.ytp-ad-skip-button-container {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* YouTube Feed/Sidebar Ads */
+ytd-ad-slot-renderer,
+ytd-banner-promo-renderer,
+ytd-video-masthead-ad-v3-renderer,
+ytd-primetime-promo-renderer,
+ytd-compact-promoted-video-renderer,
+ytd-promoted-sparkles-web-renderer,
+ytd-promoted-video-renderer,
+ytd-display-ad-renderer,
+ytd-statement-banner-renderer,
+ytd-in-feed-ad-layout-renderer,
+ytd-action-companion-ad-renderer,
+#masthead-ad,
+#player-ads,
+ytd-merch-shelf-renderer,
+ytd-compact-promoted-item-renderer,
+ytd-mealbar-promo-renderer,
+ytd-survey-renderer,
+ytd-single-option-survey-renderer,
+ytd-movie-offer-module-renderer,
+ytd-brand-video-singleton-renderer,
+ytd-brand-video-shelf-renderer {
+  display: none !important;
+}
+
+/* YouTube Premium Upsell */
+tp-yt-paper-dialog:has(yt-upsell-dialog-renderer),
+ytd-popup-container:has(yt-upsell-dialog-renderer),
+yt-upsell-dialog-renderer,
+.ytd-mealbar-promo-renderer {
+  display: none !important;
+}
+
+/* YouTube Engagement Ads */
+ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-ads"] {
+  display: none !important;
+}
+
+/* Ad showing state - hide ad info */
+.html5-video-player.ad-showing .ytp-chrome-top,
+.html5-video-player.ad-showing .ytp-ad-player-overlay {
+  display: none !important;
+}
+
+/* ==================== TWITCH ==================== */
+
+/* Twitch Video Ads */
+.video-player__ad-overlay,
+.player-ad-overlay,
+[data-a-target="video-ad-label"],
+[data-a-target="video-ad-countdown"],
+div[data-test-selector="video-ad-component"] {
+  display: none !important;
+}
+
+/* Twitch Display Ads */
+.stream-display-ad,
+.channel-leaderboard-ad,
+[data-a-target="ad-banner"],
+.top-nav__ad-container,
+.side-nav-ad,
+.home-carousel-ad {
+  display: none !important;
+}
+
+/* Twitch Prime/Sub Promos */
+.prime-offers,
+[data-a-target="prime-offer"],
+.prime-offer-button-container {
+  display: none !important;
+}
+
+/* ==================== REDDIT ==================== */
+
+/* New Reddit */
+shreddit-ad-post,
+[data-testid="ad-slot"],
+.promotedlink,
+div[data-before-content="promoted"],
+[data-promoted="true"] {
+  display: none !important;
+}
+
+/* Old Reddit */
+.promoted,
+.sponsorshipbox,
+#siteTable .promotedlink {
+  display: none !important;
+}
+
+/* ==================== TWITTER/X ==================== */
+
+[data-testid="placementTracking"],
+article:has([data-testid="placementTracking"]) {
+  display: none !important;
+}
+
+/* ==================== FACEBOOK ==================== */
+
+div[data-pagelet*="FeedUnit"]:has(a[href*="/ads/"]),
+[aria-label*="Sponsored"] {
+  display: none !important;
+}
+
+/* ==================== INSTAGRAM ==================== */
+
+article:has(span:contains("Sponsored")),
+[data-ad-preview] {
+  display: none !important;
+}
+
+/* ==================== TIKTOK ==================== */
+
+[class*="DivAdCard"],
+[data-e2e="ad-card"],
+div[class*="tiktok-ad"] {
+  display: none !important;
+}
+
+/* ==================== SPOTIFY WEB ==================== */
+
+.ad-slot,
+[data-testid="ad-slot"],
+.sponsor-container,
+.upgrade-modal {
+  display: none !important;
+}

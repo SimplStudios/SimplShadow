@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShadowBlock Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg width="40" height="40" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#8B5CF6"/>
+              <stop offset="100%" style="stop-color:#6366F1"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="45" fill="url(#grad)"/>
+          <path d="M30 50 L45 65 L70 35" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="logo-text">
+          <h1>ShadowBlock</h1>
+          <span class="version">v2.0.0</span>
+        </div>
+      </div>
+      <nav class="tabs">
+        <button class="tab active" data-tab="filter-lists">Filter Lists</button>
+        <button class="tab" data-tab="custom-rules">My Rules</button>
+        <button class="tab" data-tab="whitelist">Whitelist</button>
+        <button class="tab" data-tab="stats">Statistics</button>
+        <button class="tab" data-tab="about">About</button>
+      </nav>
+    </header>
+
+    <!-- Filter Lists Tab -->
+    <section id="filter-lists" class="tab-content active">
+      <div class="section-header">
+        <h2>Filter Lists</h2>
+        <p>Enable filter lists to block ads, trackers, and annoyances</p>
+      </div>
+
+      <div class="filter-category">
+        <h3>Ads</h3>
+        <div class="filter-list">
+          <label class="filter-item">
+            <input type="checkbox" data-list="easylist" checked>
+            <div class="filter-info">
+              <span class="filter-name">EasyList</span>
+              <span class="filter-desc">Primary ad blocking list</span>
+            </div>
+            <span class="filter-count">~80,000 rules</span>
+          </label>
+          <label class="filter-item">
+            <input type="checkbox" data-list="easylist-noncookie">
+            <div class="filter-info">
+              <span class="filter-name">EasyList - Cookie Notices</span>
+              <span class="filter-desc">Blocks cookie consent popups</span>
+            </div>
+            <span class="filter-count">~5,000 rules</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="filter-category">
+        <h3>Privacy</h3>
+        <div class="filter-list">
+          <label class="filter-item">
+            <input type="checkbox" data-list="easyprivacy" checked>
+            <div class="filter-info">
+              <span class="filter-name">EasyPrivacy</span>
+              <span class="filter-desc">Blocks tracking scripts and pixels</span>
+            </div>
+            <span class="filter-count">~25,000 rules</span>
+          </label>
+          <label class="filter-item">
+            <input type="checkbox" data-list="fanboy-enhanced">
+            <div class="filter-info">
+              <span class="filter-name">Fanboy's Enhanced Tracking List</span>
+              <span class="filter-desc">Additional tracking protection</span>
+            </div>
+            <span class="filter-count">~10,000 rules</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="filter-category">
+        <h3>Annoyances</h3>
+        <div class="filter-list">
+          <label class="filter-item">
+            <input type="checkbox" data-list="fanboy-annoyance" checked>
+            <div class="filter-info">
+              <span class="filter-name">Fanboy's Annoyance List</span>
+              <span class="filter-desc">Blocks popups, social widgets, newsletters</span>
+            </div>
+            <span class="filter-count">~50,000 rules</span>
+          </label>
+          <label class="filter-item">
+            <input type="checkbox" data-list="ublock-annoyances">
+            <div class="filter-info">
+              <span class="filter-name">uBlock Filters - Annoyances</span>
+              <span class="filter-desc">Additional annoyance blocking</span>
+            </div>
+            <span class="filter-count">~3,000 rules</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="filter-category">
+        <h3>Multipurpose</h3>
+        <div class="filter-list">
+          <label class="filter-item">
+            <input type="checkbox" data-list="peter-lowe">
+            <div class="filter-info">
+              <span class="filter-name">Peter Lowe's Ad Server List</span>
+              <span class="filter-desc">Comprehensive server blocklist</span>
+            </div>
+            <span class="filter-count">~3,000 rules</span>
+          </label>
+          <label class="filter-item">
+            <input type="checkbox" data-list="disconnect">
+            <div class="filter-info">
+              <span class="filter-name">Disconnect</span>
+              <span class="filter-desc">Basic tracking protection</span>
+            </div>
+            <span class="filter-count">~2,000 rules</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="custom-url-section">
+        <h3>Custom Filter Lists</h3>
+        <div class="add-url-form">
+          <input type="text" id="customUrl" placeholder="Enter filter list URL (EasyList/AdBlock Plus format)">
+          <button id="addCustomUrl" class="btn btn-primary">Add</button>
+        </div>
+        <div id="customFilterLists" class="custom-list"></div>
+      </div>
+
+      <div class="actions">
+        <button id="updateLists" class="btn btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 4v6h-6M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          Update All Lists
+        </button>
+        <span class="last-update">Last updated: <span id="lastUpdate">Never</span></span>
+      </div>
+    </section>
+
+    <!-- Custom Rules Tab -->
+    <section id="custom-rules" class="tab-content">
+      <div class="section-header">
+        <h2>My Filters</h2>
+        <p>Add custom filter rules. Supports AdBlock Plus / uBlock Origin syntax.</p>
+      </div>
+
+      <div class="rules-editor">
+        <textarea id="userRules" placeholder="Enter your custom filter rules here, one per line.
+
+Examples:
+||ads.example.com^ (block domain)
+@@||example.com^$document (whitelist site)
+example.com##.ad-banner (hide element)
+example.com##+js(aopr, adBlock) (scriptlet injection)"></textarea>
+      </div>
+
+      <div class="quick-rules">
+        <h3>Quick Add</h3>
+        <div class="quick-rule-form">
+          <select id="ruleType">
+            <option value="block">Block Domain</option>
+            <option value="whitelist">Whitelist Domain</option>
+            <option value="hide">Hide Element</option>
+          </select>
+          <input type="text" id="ruleValue" placeholder="Enter domain or selector">
+          <button id="addQuickRule" class="btn btn-primary">Add</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="saveRules" class="btn btn-primary">Save Rules</button>
+        <button id="clearRules" class="btn btn-danger">Clear All</button>
+      </div>
+    </section>
+
+    <!-- Whitelist Tab -->
+    <section id="whitelist" class="tab-content">
+      <div class="section-header">
+        <h2>Whitelisted Sites</h2>
+        <p>ShadowBlock is disabled on these sites</p>
+      </div>
+
+      <div class="add-whitelist-form">
+        <input type="text" id="whitelistDomain" placeholder="example.com">
+        <button id="addWhitelist" class="btn btn-primary">Add Site</button>
+      </div>
+
+      <div id="whitelistItems" class="whitelist-list"></div>
+    </section>
+
+    <!-- Statistics Tab -->
+    <section id="stats" class="tab-content">
+      <div class="section-header">
+        <h2>Blocking Statistics</h2>
+        <p>See how ShadowBlock is protecting you</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statSession">0</div>
+          <div class="stat-label">This Session</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statToday">0</div>
+          <div class="stat-label">Today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statWeek">0</div>
+          <div class="stat-label">This Week</div>
+        </div>
+        <div class="stat-card highlight">
+          <div class="stat-value" id="statAllTime">0</div>
+          <div class="stat-label">All Time</div>
+        </div>
+      </div>
+
+      <div class="top-blocked">
+        <h3>Most Blocked Domains</h3>
+        <div id="topBlockedList" class="top-blocked-list"></div>
+      </div>
+
+      <div class="actions">
+        <button id="resetStats" class="btn btn-danger">Reset Statistics</button>
+        <button id="exportStats" class="btn btn-secondary">Export Data</button>
+      </div>
+    </section>
+
+    <!-- About Tab -->
+    <section id="about" class="tab-content">
+      <div class="about-content">
+        <div class="about-logo">
+          <svg width="80" height="80" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#8B5CF6"/>
+                <stop offset="100%" style="stop-color:#6366F1"/>
+              </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="45" fill="url(#grad2)"/>
+            <path d="M30 50 L45 65 L70 35" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2>ShadowBlock v2.0.0</h2>
+        <p class="tagline">Advanced ad blocking for a cleaner, faster web</p>
+
+        <div class="features-list">
+          <h3>Features</h3>
+          <ul>
+            <li>Network-level ad blocking</li>
+            <li>EasyList filter list support</li>
+            <li>Scriptlet injection for anti-adblock bypass</li>
+            <li>WebSocket & WebRTC tracking protection</li>
+            <li>YouTube & Twitch ad blocking</li>
+            <li>Cosmetic filtering (element hiding)</li>
+            <li>Custom filter rules</li>
+            <li>Per-site controls</li>
+          </ul>
+        </div>
+
+        <div class="credits">
+          <h3>Credits</h3>
+          <p>Filter lists provided by:</p>
+          <ul>
+            <li>EasyList authors</li>
+            <li>Fanboy</li>
+            <li>uBlock Origin</li>
+            <li>Peter Lowe</li>
+          </ul>
+        </div>
+
+        <div class="links">
+          <a href="#" class="btn btn-secondary">Documentation</a>
+          <a href="#" class="btn btn-secondary">Report Issue</a>
+          <a href="#" class="btn btn-secondary">Source Code</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

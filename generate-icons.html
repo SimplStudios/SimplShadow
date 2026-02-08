@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ShadowBlock Icon Generator</title>
+  <style>
+    body { font-family: system-ui; padding: 40px; background: #1a1a2e; color: white; }
+    h1 { margin-bottom: 20px; }
+    .icons { display: flex; gap: 20px; flex-wrap: wrap; }
+    .icon-box { text-align: center; }
+    canvas { border: 1px solid #333; border-radius: 8px; margin-bottom: 10px; }
+    button { background: #8B5CF6; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+    button:hover { background: #7C3AED; }
+    .instructions { margin-top: 30px; padding: 20px; background: #252540; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>🛡️ ShadowBlock Icon Generator</h1>
+  <p>Click each "Download" button to save the icon files, then place them in the icons folder.</p>
+  
+  <div class="icons">
+    <div class="icon-box">
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <br><button onclick="download('icon16', 16)">Download icon16.png</button>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <br><button onclick="download('icon48', 48)">Download icon48.png</button>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <br><button onclick="download('icon128', 128)">Download icon128.png</button>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>Instructions:</h3>
+    <ol>
+      <li>Download all three icons using the buttons above</li>
+      <li>For Chrome: Place them in <code>adblocker-chrome/icons/</code></li>
+      <li>For Firefox: You can use the SVG files already created, or replace them with these PNGs</li>
+    </ol>
+  </div>
+
+  <script>
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      const scale = size / 24;
+      
+      // Clear
+      ctx.clearRect(0, 0, size, size);
+      
+      // Create gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#8B5CF6');
+      gradient.addColorStop(1, '#6366F1');
+      
+      // Draw shield path
+      ctx.save();
+      ctx.scale(scale, scale);
+      
+      // Shield background
+      ctx.beginPath();
+      ctx.moveTo(12, 2);
+      ctx.lineTo(4, 6);
+      ctx.lineTo(4, 12);
+      ctx.bezierCurveTo(4, 16.4183, 7.58172, 20, 12, 20);
+      ctx.bezierCurveTo(16.4183, 20, 20, 16.4183, 20, 12);
+      ctx.lineTo(20, 6);
+      ctx.lineTo(12, 2);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      
+      // Checkmark
+      ctx.beginPath();
+      ctx.moveTo(9, 12);
+      ctx.lineTo(11, 14);
+      ctx.lineTo(15, 10);
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+      
+      ctx.restore();
+    }
+    
+    function download(id, size) {
+      const canvas = document.getElementById(id);
+      const link = document.createElement('a');
+      link.download = `icon${size}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+    
+    // Draw all icons on load
+    drawIcon(document.getElementById('icon16'), 16);
+    drawIcon(document.getElementById('icon48'), 48);
+    drawIcon(document.getElementById('icon128'), 128);
+  </script>
+</body>
+</html>

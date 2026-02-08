@@ -1,0 +1,88 @@
+{
+  "manifest_version": 2,
+  "name": "SimplShadow",
+  "version": "2.1.0",
+  "description": "Lightweight, powerful ad blocker with smart protection",
+  "author": "SimplShadow",
+  "homepage_url": "https://github.com/simplshadow",
+  
+  "icons": {
+    "16": "icons/icon16.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  },
+
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "tabs",
+    "contextMenus",
+    "<all_urls>"
+  ],
+
+  "background": {
+    "scripts": [
+      "data/blocklist.js",
+      "data/streaming-blocklist.js",
+      "lib/filter-parser.js",
+      "lib/scriptlets.js",
+      "lib/redirect-resources.js",
+      "background-enhanced.js"
+    ],
+    "persistent": true
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-websocket.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtu.be/*",
+        "*://*.youtube-nocookie.com/*"
+      ],
+      "js": ["content-youtube-enhanced.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.twitch.tv/*"
+      ],
+      "js": ["content-twitch.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/icon16.svg",
+      "48": "icons/icon48.svg"
+    },
+    "default_title": "SimplShadow",
+    "default_popup": "popup/popup.html"
+  },
+
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+
+  "web_accessible_resources": [
+    "icons/*",
+    "data/resources/*"
+  ]
+}
