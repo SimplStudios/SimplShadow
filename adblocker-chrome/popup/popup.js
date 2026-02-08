@@ -211,8 +211,8 @@ class SimplShadowPopup {
       
       // Update icon
       const iconPath = this.state.enabled ? 
-        { 16: 'icons/icon16.png', 48: 'icons/icon48.png' } :
-        { 16: 'icons/icon16-disabled.png', 48: 'icons/icon48-disabled.png' };
+        { 16: 'icons/icon16.svg', 48: 'icons/icon48.svg' } :
+        { 16: 'icons/icon16-disabled.svg', 48: 'icons/icon48-disabled.svg' };
       
       chrome.action.setIcon({ path: iconPath });
     } catch (e) {

@@ -60,8 +60,8 @@ function updateBadge() {
 // Update extension icon based on state
 function updateIcon() {
   const iconPath = state.enabled ? 
-    { 16: 'icons/icon16.png', 48: 'icons/icon48.png', 128: 'icons/icon128.png' } :
-    { 16: 'icons/icon16-disabled.png', 48: 'icons/icon48-disabled.png', 128: 'icons/icon128-disabled.png' };
+    { 16: 'icons/icon16.svg', 48: 'icons/icon48.svg', 128: 'icons/icon128.svg' } :
+    { 16: 'icons/icon16-disabled.svg', 48: 'icons/icon48-disabled.svg', 128: 'icons/icon128.svg' };
   chrome.action.setIcon({ path: iconPath });
 }
 
