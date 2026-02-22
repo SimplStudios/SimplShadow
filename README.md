@@ -2,7 +2,7 @@
 
 A high-performance ad blocker with real-time analytics and a beautiful modern UI.
 
-![Version](https://img.shields.io/badge/version-2.1.0-3B82F6)
+![Version](https://img.shields.io/badge/version-2.2.0-3B82F6)
 ![Firefox](https://img.shields.io/badge/Firefox-Manifest%20V2-FF7139)
 ![Chrome](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4)
 
