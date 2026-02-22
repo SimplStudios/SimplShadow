@@ -28,6 +28,8 @@ A high-performance ad blocker with real-time analytics and a beautiful modern UI
 
 ## Installation
 
+/> Ensure you downloaded the zip file of this repository
+
 ### Firefox (Manifest V2)
 
 1. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`
