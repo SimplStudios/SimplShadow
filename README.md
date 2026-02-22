@@ -215,9 +215,11 @@ Make sure to select the theme in SimplShadow settings, or choose "Auto" to follo
 
 MIT License - Free to use, modify, and distribute.
 
-## Contributing
+## Contact
 
-Feel free to submit issues and pull requests!
+Email: simplstudios@protonmail.com
+
+Company Website: https://simplstudios.vercel.app
 
 ---
 
