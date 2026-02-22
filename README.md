@@ -1,4 +1,4 @@
-# 🛡️ SimplShadow - Ad Blocker Extension
+# 🛡️ SimplShadow - The #1 Ad Blocker on Chrome 
 
 A high-performance ad blocker with real-time analytics and a beautiful modern UI.
 
