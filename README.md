@@ -28,7 +28,7 @@ A high-performance ad blocker with real-time analytics and a beautiful modern UI
 
 ## Installation
 
-/> Ensure you downloaded the zip file of this repository
+**Ensure you downloaded the zip file of this repository**
 
 ### Firefox (Manifest V2)
 
